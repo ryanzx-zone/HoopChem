@@ -1,71 +1,121 @@
-# NBA Lineup Synergy Analytics
+# HoopChem 🏀
 
-A front-office style analytics system for measuring NBA lineup chemistry and player synergy.
+**NBA lineup synergy analytics engine — measuring player chemistry beyond box scores.**
 
-## Project Goal
+Traditional stats like plus/minus and net rating are noisy and treat players as independent units. But basketball is a team sport — the same player can look elite in one lineup and invisible in another. HoopChem identifies which player combinations actually work and why.
 
-Identify which player combinations perform better or worse than expected, find hidden "glue" players, and analyze how lineup chemistry changes across contexts.
+## The Problem
 
-## Key Questions This System Answers
+Front offices need to answer questions that box scores can't:
 
-1. Which 5-man lineups outperform their expected rating?
-2. Which players consistently improve teammate efficiency?
-3. Which star pairings hurt spacing or ball movement?
-4. Which bench lineups punch above their weight?
-5. How does lineup performance change by opponent/game state?
+- Which 5-man lineups outperform their expected rating?
+- Who are the hidden "glue guys" that elevate teammates without scoring?
+- Which star pairings hurt spacing or ball movement?
+- Which bench units punch above their weight?
+- How does lineup chemistry change against different opponents?
 
-## Tech Stack
+## What This Project Does
 
-- **Data Source**: nba_api (Python)
-- **Processing**: Python, Pandas, PySpark (later)
-- **Storage**: PostgreSQL (analytics), MongoDB (graph relationships)
-- **Visualization**: Power BI
-- **Cloud**: AWS (stretch goal)
+HoopChem processes NBA play-by-play data to:
+
+1. **Track lineup stints** — Detect substitutions and track exactly which 5 players are on court at every moment
+2. **Calculate lineup metrics** — Points, possessions, offensive/defensive rating per lineup combination
+3. **Model synergy** — Compare actual lineup performance vs. expected (based on individual player stats)
+4. **Surface insights** — Identify over/under-performing lineups and player pairings
+
+## Architecture
+
+```
+nba_api → Python/Pandas → PostgreSQL → Power BI
+              ↓
+         PySpark (scale)
+              ↓
+         MongoDB (graph storage)
+```
+
+| Tool | Purpose |
+|------|---------|
+| **nba_api** | Pull official NBA play-by-play and game data |
+| **Python/Pandas** | Lineup stint detection, metric calculations |
+| **PostgreSQL** | Structured storage for analytics queries |
+| **PySpark** | Process full historical seasons at scale |
+| **MongoDB** | Store player-pair synergy as graph relationships |
+| **Power BI** | Dashboards for lineup performance and chemistry maps |
+
+## Key Metrics
+
+- **Lineup Net Rating** — Points scored minus points allowed per 100 possessions
+- **Expected Net Rating** — Predicted performance based on individual player ratings
+- **Synergy Score** — Actual minus expected (positive = chemistry boost)
+- **Player Lift** — How much a player improves teammates' efficiency when on court together
 
 ## Project Structure
 
 ```
-nba-lineup-synergy/
-├── notebooks/           # Exploration and learning
+hoopchem/
+├── notebooks/           # Exploration and analysis
 ├── src/
-│   ├── ingestion/       # Data pulling from nba_api
-│   ├── processing/      # Lineup stint detection, metrics
-│   ├── models/          # Data models and schemas
+│   ├── ingestion/       # Pull data from nba_api
+│   ├── processing/      # Lineup stint detection
 │   └── analytics/       # Synergy calculations
-├── data/
-│   ├── raw/             # Raw API responses
-│   └── processed/       # Cleaned lineup data
 ├── sql/                 # Database schemas
-├── tests/               # Unit tests
-└── docs/                # Architecture diagrams, notes
+├── data/                # Raw and processed data (not committed)
+└── docs/                # Architecture diagrams
 ```
 
 ## Getting Started
 
 ```bash
+# Clone the repo
+git clone https://github.com/yourusername/hoopchem.git
+cd hoopchem
+
 # Create virtual environment
 python -m venv venv
-venv\Scripts\activate  # Windows
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Start with the exploration notebook
+# Start exploring
 jupyter notebook notebooks/01_explore_playbyplay.ipynb
 ```
 
-## Learning Path
+## Data Source
 
-1. **Week 1**: Understand play-by-play data structure
-2. **Week 2**: Build lineup stint detection logic
-3. **Week 3**: Calculate basic lineup metrics
-4. **Week 4**: Add database layer and synergy metrics
-5. **Week 5+**: Graph model, streaming, dashboards
+This project uses [nba_api](https://github.com/swar/nba_api), a Python client for NBA.com's API. All data is pulled directly from official NBA sources.
 
-## Why This Project?
+**Note:** Be respectful of rate limits when pulling data. The ingestion scripts include appropriate delays.
 
-Traditional plus/minus is noisy and ignores context. This system:
-- Accounts for lineup combinations, not just individuals
-- Adjusts for opponent strength and game state
-- Models synergy as a graph problem
-- Uses real data engineering patterns (not just pandas scripts)
+## Sample Insights
+
+*Coming soon — screenshots of dashboards and example findings*
+
+## Roadmap
+
+- [x] Project structure and data modeling
+- [ ] Lineup stint detection from play-by-play
+- [ ] Basic lineup metrics (net rating, possessions)
+- [ ] PostgreSQL pipeline
+- [ ] Expected vs actual lineup performance
+- [ ] Player-pair synergy graph
+- [ ] Power BI dashboards
+- [ ] PySpark for historical backfill
+
+## Why I Built This
+
+This is a portfolio project demonstrating end-to-end data engineering skills:
+
+- **Data modeling** — Designing schemas for complex relationships
+- **ETL pipelines** — Ingesting, transforming, and loading real-world data
+- **SQL** — Analytics queries and aggregations
+- **Python** — Data processing and business logic
+- **Domain expertise** — Translating basketball questions into technical solutions
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+Built with 🏀 and ☕
